@@ -12,7 +12,7 @@ public class CoworkingSpace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "space_id")
-    private int spaceID;
+    private Integer spaceID;
 
     @NotBlank(message = "Space type is required")
     @Size(min = 2, max = 50, message = "Space type must be between 2-50 characters")

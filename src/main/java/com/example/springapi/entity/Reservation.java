@@ -12,9 +12,9 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
-    private int bookingID;
+    private Integer bookingID;
 
-    @NotBlank(message = "Customer name is required")
+   @NotBlank(message = "Customer name is required")
     @Size(min = 2, max = 100, message = "Name must be between 2-100 characters")
     @Column(name = "customer_name", nullable = false)
     private String customerName;

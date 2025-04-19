@@ -3,51 +3,45 @@ package com.example.springapi.controller;
 import com.example.springapi.entity.CoworkingSpace;
 import com.example.springapi.entity.Reservation;
 import com.example.springapi.service.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
-    private final ReservationService reservationService;
-
-    public CustomerController(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("/panel")
     public ResponseEntity<String> customerPanel() {
         return ResponseEntity.ok("Customer Panel Active");
     }
 
-    @GetMapping("/view-spaces")
+    @GetMapping("/spaces")
     public ResponseEntity<List<CoworkingSpace>> viewAvailableSpaces() {
-        List<CoworkingSpace> spaces = reservationService.viewSpaces();
-        return ResponseEntity.ok(spaces);
+        return ResponseEntity.ok(reservationService.viewSpaces());
     }
 
-    @PostMapping("/book")
+    @PostMapping("/bookings")
     public ResponseEntity<String> bookSpace(@RequestBody Reservation reservation) {
         reservationService.bookSpace(reservation);
         return ResponseEntity.ok("Space booked successfully");
     }
 
-    @GetMapping("/my-bookings/{customerId}")
+    @GetMapping("/bookings/{customerId}")
     public ResponseEntity<List<Reservation>> myBookings(@PathVariable int customerId) {
         return ResponseEntity.ok(reservationService.myBookings(customerId));
     }
 
-    @DeleteMapping("/cancel/{bookingID}")
-    public ResponseEntity<String> cancelBooking(@PathVariable int bookingID) {
-        boolean canceled = reservationService.cancelBooking(bookingID);
-        if (canceled) {
-            return ResponseEntity.ok("Booking canceled");
-        } else {
-            return ResponseEntity.badRequest().body("Failed to cancel booking");
-        }
+    @DeleteMapping("/bookings/{bookingId}")
+    public ResponseEntity<String> cancelBooking(@PathVariable int bookingId) {
+        boolean canceled = reservationService.cancelBooking(bookingId);
+        return canceled ?
+                ResponseEntity.ok("Booking canceled") :
+                ResponseEntity.badRequest().body("Failed to cancel booking");
     }
 }
-
