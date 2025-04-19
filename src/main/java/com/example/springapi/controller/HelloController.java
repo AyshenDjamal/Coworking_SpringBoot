@@ -1,4 +1,4 @@
-/*
+
 package com.example.springapi.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-        ./mvnw clean package                    jar fayili alir
-        docker build -t my-spring-api .        Docker image yaradir
-        docker run -d -p 8080:8080 --name spring-api-container my-spring-api           Yaranan docker image run edir
+       // ./mvnw clean package                    jar fayili alir
+        //docker build -t my-spring-api .        Docker image yaradir
+        //docker run -d -p 8080:8080 --name spring-api-container my-spring-api           Yaranan docker image run edir
 
 
     @GetMapping("/api/salam-dunya")
@@ -52,4 +52,4 @@ public class HelloController {
         }
     }
 }
-*/
+
