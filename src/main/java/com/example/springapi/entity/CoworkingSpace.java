@@ -1,5 +1,7 @@
 package com.example.springapi.entity;
 
+import com.example.springapi.state.SpaceState;
+import com.example.springapi.state.AvailableState;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.util.ArrayList;
@@ -27,23 +29,46 @@ public class CoworkingSpace {
     @Column(name = "availability_status", nullable = false)
     private boolean isAvailable = true;
 
+    @Transient
+    private SpaceState currentState = new AvailableState();
+
     @OneToMany(mappedBy = "space", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations = new ArrayList<>();
 
-    // Constructors
-    public CoworkingSpace() {}
+
+    public CoworkingSpace() {
+        this.currentState = new AvailableState();
+    }
 
     public CoworkingSpace(String spaceType, double pricePerHour) {
+        this();
         this.spaceType = spaceType;
         this.pricePerHour = pricePerHour;
     }
 
+
+    public String checkAvailability() {
+        return currentState.getStatusMessage();
+    }
+
+    public boolean canBeBooked() {
+        return currentState.canBeBooked();
+    }
+
+    public void bookSpace() {
+        currentState.handleBooking(this);
+    }
+
+    public void cancelReservation() {
+        currentState.handleCancellation(this);
+    }
+
     // Getters and Setters
-    public int getSpaceID() {
+    public Integer getSpaceID() {
         return spaceID;
     }
 
-    public void setSpaceID(int spaceID) {
+    public void setSpaceID(Integer spaceID) {
         this.spaceID = spaceID;
     }
 
@@ -71,6 +96,14 @@ public class CoworkingSpace {
         isAvailable = available;
     }
 
+    public SpaceState getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(SpaceState currentState) {
+        this.currentState = currentState;
+    }
+
     public List<Reservation> getReservations() {
         return reservations;
     }
@@ -79,8 +112,6 @@ public class CoworkingSpace {
         this.reservations = reservations;
     }
 
-
-
     @Override
     public String toString() {
         return "CoworkingSpace{" +
@@ -88,6 +119,7 @@ public class CoworkingSpace {
                 ", spaceType='" + spaceType + '\'' +
                 ", pricePerHour=" + pricePerHour +
                 ", isAvailable=" + isAvailable +
+                ", currentState=" + currentState.getClass().getSimpleName() +
                 '}';
     }
 }
