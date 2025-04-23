@@ -34,8 +34,8 @@ public class ReservationService {
     @CacheEvict(value = {"availableSpaces", "bookings"}, allEntries = true)
     public void bookSpace(Reservation reservation) {
         CoworkingSpace space = reservation.getSpace();
-        if (!space.getIsAvailable()) {
-            throw new IllegalStateException("Space is not available");
+        if (!space.canBeBooked()) {
+            throw new IllegalStateException(space.checkAvailability());
         }
         space.setIsAvailable(false);
         spaceRepository.save(space);
@@ -58,6 +58,6 @@ public class ReservationService {
         spaceRepository.save(space);
 
         reservationRepository.delete(reservation);
-        return false;
+        return true;
     }
 }
